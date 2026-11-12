@@ -1,0 +1,424 @@
+/* ==========================================================================
+   ProSlide for Elementor — Frontend & Editor Styles
+   ========================================================================== */
+
+.proslide-wrapper {
+	position: relative;
+	width: 100%;
+	--proslide-anim-duration: 650ms;
+}
+
+.proslide-swiper {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.proslide-slide {
+	position: relative;
+	overflow: hidden;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Background & Overlay Layers */
+.proslide-bg-layer {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	transform: scale(1);
+	will-change: transform;
+}
+
+.proslide-bg-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+}
+
+/* Whole Slide Link */
+.proslide-whole-link {
+	position: absolute;
+	inset: 0;
+	z-index: 4;
+}
+
+/* Elementor Template Layer */
+.proslide-template-layer {
+	position: relative;
+	z-index: 3;
+	width: 100%;
+}
+
+/* Slide Inner Content Container */
+.proslide-slide-inner {
+	position: relative;
+	z-index: 5;
+	width: 100%;
+	min-height: 550px;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.proslide-content-box {
+	position: relative;
+	z-index: 6;
+	width: 100%;
+	max-width: 760px;
+	box-sizing: border-box;
+}
+
+/* Nested Slider Support */
+.proslide-is-nested .proslide-slide-inner > .elementor-element {
+	width: 100%;
+}
+
+.proslide-is-nested .proslide-nested-wrapper > .elementor-element.swiper-slide {
+	min-height: 450px;
+	position: relative;
+}
+
+/* Typography & Elements */
+.proslide-subtitle {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	line-height: 1.3;
+}
+
+.proslide-subtitle-icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+.proslide-subtitle-icon svg {
+	width: 1em;
+	height: 1em;
+}
+
+.proslide-title {
+	margin: 0;
+	font-size: clamp(28px, 4vw, 56px);
+	font-weight: 700;
+	line-height: 1.15;
+}
+
+.proslide-description {
+	font-size: 16px;
+	line-height: 1.65;
+}
+
+.proslide-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* Buttons */
+.proslide-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	justify-content: inherit;
+}
+
+.proslide-btn {
+	position: relative;
+	z-index: 6;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: all 0.28s ease;
+	border: 1px solid transparent;
+}
+
+.proslide-btn-icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+.proslide-btn-icon svg {
+	width: 1em;
+	height: 1em;
+}
+
+/* ==========================================================================
+   Ken Burns Background Animation
+   ========================================================================== */
+@keyframes proslideKenBurnsIn {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(1.12);
+	}
+}
+
+@keyframes proslideKenBurnsOut {
+	0% {
+		transform: scale(1.12);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.swiper-slide-active .proslide-ken-burns-in {
+	animation: proslideKenBurnsIn 8s ease-out forwards;
+}
+
+.swiper-slide-active .proslide-ken-burns-out {
+	animation: proslideKenBurnsOut 8s ease-out forwards;
+}
+
+/* ==========================================================================
+   Content Entrance Animations
+   ========================================================================== */
+[class*="proslide-anim-"] .proslide-subtitle,
+[class*="proslide-anim-"] .proslide-title,
+[class*="proslide-anim-"] .proslide-description,
+[class*="proslide-anim-"] .proslide-buttons {
+	opacity: 0;
+}
+
+.swiper-slide-active [class*="proslide-anim-"] .proslide-subtitle,
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-subtitle,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-subtitle {
+	animation-delay: 80ms;
+}
+
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-title,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-title {
+	animation-delay: 180ms;
+}
+
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-description,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-description {
+	animation-delay: 280ms;
+}
+
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-buttons,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-buttons,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-buttons,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-buttons,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-buttons {
+	animation-delay: 380ms;
+}
+
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInUp .swiper-slide-active .proslide-buttons {
+	animation-name: proslideFadeInUp;
+	animation-duration: var(--proslide-anim-duration);
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInDown .swiper-slide-active .proslide-buttons {
+	animation-name: proslideFadeInDown;
+	animation-duration: var(--proslide-anim-duration);
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInLeft .swiper-slide-active .proslide-buttons {
+	animation-name: proslideFadeInLeft;
+	animation-duration: var(--proslide-anim-duration);
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-subtitle,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-title,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-description,
+.proslide-anim-fadeInRight .swiper-slide-active .proslide-buttons {
+	animation-name: proslideFadeInRight;
+	animation-duration: var(--proslide-anim-duration);
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.proslide-anim-zoomIn .swiper-slide-active .proslide-subtitle,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-title,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-description,
+.proslide-anim-zoomIn .swiper-slide-active .proslide-buttons {
+	animation-name: proslideZoomIn;
+	animation-duration: var(--proslide-anim-duration);
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes proslideFadeInUp {
+	from { opacity: 0; transform: translate3d(0, 28px, 0); }
+	to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes proslideFadeInDown {
+	from { opacity: 0; transform: translate3d(0, -28px, 0); }
+	to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes proslideFadeInLeft {
+	from { opacity: 0; transform: translate3d(-32px, 0, 0); }
+	to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes proslideFadeInRight {
+	from { opacity: 0; transform: translate3d(32px, 0, 0); }
+	to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes proslideZoomIn {
+	from { opacity: 0; transform: scale(0.92); }
+	to   { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   Navigation Arrows
+   ========================================================================== */
+.proslide-arrow {
+	position: absolute;
+	z-index: 15;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 46px;
+	height: 46px;
+	border: none;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.45);
+	color: #ffffff;
+	cursor: pointer;
+	transition: all 0.25s ease;
+	padding: 0;
+}
+
+.proslide-arrow.swiper-button-disabled {
+	opacity: 0.35;
+	pointer-events: none;
+}
+
+.proslide-arrows-inside .proslide-arrow-prev,
+.proslide-arrows-inside .proslide-arrow-next {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.proslide-arrows-inside .proslide-arrow-prev { left: 18px; }
+.proslide-arrows-inside .proslide-arrow-next { right: 18px; }
+
+.proslide-arrows-outside .proslide-arrow-prev,
+.proslide-arrows-outside .proslide-arrow-next {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.proslide-arrows-outside .proslide-arrow-prev { left: -24px; }
+.proslide-arrows-outside .proslide-arrow-next { right: -24px; }
+
+.proslide-arrows-bottom-right .proslide-arrows {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	z-index: 15;
+	display: flex;
+	gap: 10px;
+}
+
+.proslide-arrows-bottom-left .proslide-arrows {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	z-index: 15;
+	display: flex;
+	gap: 10px;
+}
+
+.proslide-arrows-top-right .proslide-arrows {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	z-index: 15;
+	display: flex;
+	gap: 10px;
+}
+
+.proslide-arrows-bottom-right .proslide-arrow,
+.proslide-arrows-bottom-left .proslide-arrow,
+.proslide-arrows-top-right .proslide-arrow {
+	position: static;
+	transform: none;
+}
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+.proslide-pagination.swiper-pagination {
+	z-index: 15;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.proslide-dots-inside-bottom .proslide-pagination {
+	position: absolute;
+	bottom: 18px;
+	left: 0;
+	width: 100%;
+}
+
+.proslide-dots-outside-bottom .proslide-pagination {
+	position: relative;
+	margin-top: 16px;
+	width: 100%;
+}
+
+.proslide-dots-inside-top .proslide-pagination {
+	position: absolute;
+	top: 18px;
+	bottom: auto;
+	left: 0;
+	width: 100%;
+}
+
+.proslide-wrapper .swiper-pagination-bullet {
+	transition: width 0.28s ease, background-color 0.25s ease;
+	cursor: pointer;
+}
+
+.proslide-wrapper .swiper-pagination-progressbar {
+	height: 4px;
+	border-radius: 4px;
+	overflow: hidden;
+}
