@@ -321,7 +321,7 @@
 .proslide-arrow {
 	pointer-events: auto;
 	box-sizing: border-box;
-	display: inline-flex !important;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	width: 46px;

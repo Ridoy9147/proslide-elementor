@@ -502,7 +502,7 @@ class Helpers {
 					'none' => esc_html__( 'Hide', 'proslide-elementor' ),
 				],
 				'selectors'    => [
-					'{{WRAPPER}} .proslide-arrow' => 'display: {{VALUE}};',
+					'{{WRAPPER}} .proslide-arrow' => 'display: {{VALUE}} !important;',
 				],
 			]
 		);
@@ -515,13 +515,25 @@ class Helpers {
 				'size_units' => [ 'px' ],
 				'range'      => [
 					'px' => [
-						'min' => 24,
+						'min' => 20,
 						'max' => 100,
 					],
 				],
 				'default'    => [ 'size' => 46, 'unit' => 'px' ],
 				'selectors'  => [
-					'{{WRAPPER}} .proslide-arrow' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .proslide-arrow' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; min-width: {{SIZE}}{{UNIT}}; min-height: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$widget->add_responsive_control(
+			'arrow_padding',
+			[
+				'label'      => esc_html__( 'Padding', 'proslide-elementor' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .proslide-arrow' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
