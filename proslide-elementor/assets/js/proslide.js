@@ -2,43 +2,6 @@
 	'use strict';
 
 	/**
-	 * Prepare nested slider child containers in Elementor editor preview.
-	 */
-	function prepareNestedEditorSlides( $wrapper ) {
-		if ( ! $wrapper.hasClass( 'proslide-is-nested' ) ) {
-			return;
-		}
-
-		var $nestedWrap = $wrapper.find( '.proslide-nested-wrapper' ).first();
-		var rawBgs = $wrapper.attr( 'data-nested-bgs' );
-		var bgs = [];
-
-		if ( rawBgs ) {
-			try {
-				bgs = JSON.parse( rawBgs );
-			} catch ( e ) {
-				bgs = [];
-			}
-		}
-
-		$nestedWrap.children( '.elementor-element, .e-con' ).each( function ( idx ) {
-			var $child = $( this );
-			$child.addClass( 'swiper-slide proslide-slide' );
-
-			if ( bgs[ idx ] ) {
-				var bg = bgs[ idx ];
-				$child.css( {
-					'background-color': bg.color || '',
-					'background-image': bg.image ? 'url("' + bg.image + '")' : '',
-					'background-size': bg.size || 'cover',
-					'background-position': bg.position || 'center center',
-					'background-repeat': 'no-repeat'
-				} );
-			}
-		} );
-	}
-
-	/**
 	 * Build Swiper options object from widget data-proslide-config.
 	 */
 	function buildSwiperOptions( $wrapper, config ) {
@@ -143,8 +106,6 @@
 			existing.destroy( true, true );
 			$swiperEl.removeData( 'proslideInstance' );
 		}
-
-		prepareNestedEditorSlides( $wrapper );
 
 		var rawConfig = $wrapper.attr( 'data-proslide-config' );
 		var config    = {};

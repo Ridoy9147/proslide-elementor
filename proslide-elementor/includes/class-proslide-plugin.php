@@ -46,6 +46,7 @@ final class Plugin {
 		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
 		add_action( 'elementor/frontend/after_register_scripts', [ $this, 'register_scripts' ] );
 		add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'enqueue_editor_styles' ] );
+		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'enqueue_editor_scripts' ] );
 	}
 
 	/**
@@ -138,5 +139,20 @@ final class Plugin {
 	 */
 	public function enqueue_editor_styles() {
 		wp_enqueue_style( 'proslide-css' );
+	}
+
+	/**
+	 * Enqueue scripts inside Elementor editor for nested elements support.
+	 */
+	public function enqueue_editor_scripts() {
+		if ( $this->is_nested_elements_active() ) {
+			wp_enqueue_script(
+				'proslide-editor-js',
+				PROSLIDE_URL . 'assets/js/proslide-editor.js',
+				[ 'elementor-editor' ],
+				PROSLIDE_VERSION,
+				true
+			);
+		}
 	}
 }

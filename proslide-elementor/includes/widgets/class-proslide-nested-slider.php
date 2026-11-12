@@ -16,6 +16,7 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Modules\NestedElements\Base\Widget_Nested_Base;
 use Elementor\Modules\NestedElements\Controls\Control_Nested_Repeater;
+use Elementor\Plugin;
 use Elementor\Repeater;
 use Elementor\Utils;
 use ProSlide\Helpers;
@@ -90,6 +91,18 @@ class Nested_Slider extends Widget_Nested_Base {
 	 */
 	public function get_script_depends() {
 		return [ 'proslide-js' ];
+	}
+
+	/**
+	 * Check if widget should show in Elementor panel.
+	 *
+	 * @return bool
+	 */
+	public function show_in_panel(): bool {
+		if ( isset( Plugin::$instance->experiments ) && method_exists( Plugin::$instance->experiments, 'is_feature_active' ) ) {
+			return Plugin::$instance->experiments->is_feature_active( 'nested-elements' );
+		}
+		return true;
 	}
 
 	/**
@@ -386,43 +399,6 @@ class Nested_Slider extends Widget_Nested_Base {
 				</div>
 			</div>
 			<?php Helpers::render_navigation_and_pagination( $settings ); ?>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Elementor editor live JS template for Nested Elements.
-	 */
-	protected function content_template() {
-		?>
-		<#
-		var arrowsPos = settings.arrows_position || 'inside';
-		var dotsPos   = settings.dots_position || 'inside-bottom';
-		var slides    = settings.slides || [];
-		var slideBgs  = [];
-		_.each( slides, function( s ) {
-			slideBgs.push({
-				color: s.slide_bg_color || '#0f172a',
-				image: ( s.slide_bg_image && s.slide_bg_image.url ) ? s.slide_bg_image.url : '',
-				size: s.slide_bg_size || 'cover',
-				position: s.slide_bg_position || 'center center',
-				overlay: s.slide_overlay_color || ''
-			});
-		});
-		#>
-		<div class="proslide-wrapper proslide-is-nested proslide-arrows-{{ arrowsPos }} proslide-dots-{{ dotsPos }}" data-nested-bgs="{{ JSON.stringify( slideBgs ) }}">
-			<div class="swiper proslide-swiper">
-				<div class="swiper-wrapper proslide-nested-wrapper"></div>
-			</div>
-			<# if ( 'yes' === settings.show_arrows ) { #>
-				<div class="proslide-arrows">
-					<button type="button" class="proslide-arrow proslide-arrow-prev" aria-label="Previous slide">&#8249;</button>
-					<button type="button" class="proslide-arrow proslide-arrow-next" aria-label="Next slide">&#8250;</button>
-				</div>
-			<# } #>
-			<# if ( 'yes' === settings.show_dots ) { #>
-				<div class="swiper-pagination proslide-pagination"></div>
-			<# } #>
 		</div>
 		<?php
 	}

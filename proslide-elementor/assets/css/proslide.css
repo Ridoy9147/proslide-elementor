@@ -55,7 +55,7 @@
 	width: 100%;
 }
 
-/* Slide Inner Content Container */
+/* Slide Inner Content Container (Flex column layout) */
 .proslide-slide-inner {
 	position: relative;
 	z-index: 5;
@@ -72,16 +72,48 @@
 	width: 100%;
 	max-width: 760px;
 	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Content Box Horizontal Alignments via Margin Auto */
+.proslide-slide-inner.proslide-h-left .proslide-content-box {
+	margin-right: auto;
+	margin-left: 0;
+}
+
+.proslide-slide-inner.proslide-h-center .proslide-content-box {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.proslide-slide-inner.proslide-h-right .proslide-content-box {
+	margin-left: auto;
+	margin-right: 0;
 }
 
 /* Nested Slider Support */
-.proslide-is-nested .proslide-slide-inner > .elementor-element {
+.proslide-is-nested .proslide-slide-inner {
+	min-height: 400px;
+}
+
+.proslide-is-nested .proslide-slide-inner > .elementor-element,
+.proslide-is-nested .proslide-slide-inner > .e-con,
+.proslide-is-nested .proslide-nested-wrapper > .elementor-element {
 	width: 100%;
 }
 
-.proslide-is-nested .proslide-nested-wrapper > .elementor-element.swiper-slide {
-	min-height: 450px;
-	position: relative;
+.proslide-nested-empty-notice {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 40px 20px;
+	border: 2px dashed rgba(99, 102, 241, 0.45);
+	border-radius: 8px;
+	background: rgba(99, 102, 241, 0.05);
+	color: #6366f1;
+	font-size: 14px;
+	text-align: center;
 }
 
 /* Typography & Elements */
@@ -122,13 +154,12 @@
 	margin-bottom: 0;
 }
 
-/* Buttons */
+/* Buttons Container */
 .proslide-buttons {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 12px;
-	justify-content: inherit;
 }
 
 .proslide-btn {

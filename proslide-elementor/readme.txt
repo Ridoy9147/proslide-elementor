@@ -1,7 +1,8 @@
 === ProSlide for Elementor ===
 Contributors: developerhridoy, devhridoy
 Author: Developer Hridoy
-Author URI: https://github.com
+Author URI: https://github.com/Ridoy9147
+Plugin URI: https://github.com/Ridoy9147/proslide-elementor
 Tags: elementor, slider, carousel, hero slider, template slider, nested slider
 Requires at least: 6.0
 Tested up to: 6.7

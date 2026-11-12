@@ -2,8 +2,8 @@
 /**
  * ProSlide Content & Template Slider Widget.
  *
- * Supports full custom content per slide, background images with Ken Burns & overlays,
- * and rendering saved Elementor templates as slides.
+ * Supports full content design per slide, background images with Ken Burns & overlays,
+ * Elementor templates as slides, and comprehensive global + per-slide styling overrides.
  *
  * @package ProSlide
  */
@@ -103,13 +103,13 @@ class Content_Slider extends Widget_Base {
 		Helpers::register_slider_settings_controls( $this );
 		Helpers::register_navigation_pagination_controls( $this );
 
-		// Style Tab.
+		// Style Tab — Global styles (applies across all slides by default).
 		$this->register_style_container_section();
 		$this->register_style_subtitle_section();
 		$this->register_style_title_section();
 		$this->register_style_description_section();
-		$this->register_style_button_section( 'btn_1', esc_html__( 'Primary Button', 'proslide-elementor' ), '.proslide-btn-primary' );
-		$this->register_style_button_section( 'btn_2', esc_html__( 'Secondary Button', 'proslide-elementor' ), '.proslide-btn-secondary' );
+		$this->register_style_button_section( 'btn_1', esc_html__( 'Primary Button (Global)', 'proslide-elementor' ), '.proslide-btn-primary' );
+		$this->register_style_button_section( 'btn_2', esc_html__( 'Secondary Button (Global)', 'proslide-elementor' ), '.proslide-btn-secondary' );
 		Helpers::register_navigation_pagination_style_controls( $this );
 	}
 
@@ -511,7 +511,7 @@ class Content_Slider extends Widget_Base {
 
 		$repeater->end_controls_tab();
 
-		// Tab 3: Per-Slide Layout & Custom Style.
+		// Tab 3: Per-Slide Layout & Custom Style Overrides.
 		$repeater->start_controls_tab(
 			'tab_slide_layout',
 			[
@@ -520,21 +520,21 @@ class Content_Slider extends Widget_Base {
 		);
 
 		$repeater->add_control(
-			'slide_h_align',
+			'slide_h_pos',
 			[
 				'label'   => esc_html__( 'Horizontal Position', 'proslide-elementor' ),
 				'type'    => Controls_Manager::CHOOSE,
 				'default' => 'center',
 				'options' => [
-					'flex-start' => [
+					'left'   => [
 						'title' => esc_html__( 'Left', 'proslide-elementor' ),
 						'icon'  => 'eicon-h-align-left',
 					],
-					'center'     => [
+					'center' => [
 						'title' => esc_html__( 'Center', 'proslide-elementor' ),
 						'icon'  => 'eicon-h-align-center',
 					],
-					'flex-end'   => [
+					'right'  => [
 						'title' => esc_html__( 'Right', 'proslide-elementor' ),
 						'icon'  => 'eicon-h-align-right',
 					],
@@ -543,21 +543,21 @@ class Content_Slider extends Widget_Base {
 		);
 
 		$repeater->add_control(
-			'slide_v_align',
+			'slide_v_pos',
 			[
 				'label'   => esc_html__( 'Vertical Position', 'proslide-elementor' ),
 				'type'    => Controls_Manager::CHOOSE,
 				'default' => 'center',
 				'options' => [
-					'flex-start' => [
+					'top'    => [
 						'title' => esc_html__( 'Top', 'proslide-elementor' ),
 						'icon'  => 'eicon-v-align-top',
 					],
-					'center'     => [
+					'center' => [
 						'title' => esc_html__( 'Middle', 'proslide-elementor' ),
 						'icon'  => 'eicon-v-align-middle',
 					],
-					'flex-end'   => [
+					'bottom' => [
 						'title' => esc_html__( 'Bottom', 'proslide-elementor' ),
 						'icon'  => 'eicon-v-align-bottom',
 					],
@@ -599,13 +599,31 @@ class Content_Slider extends Widget_Base {
 		);
 
 		$repeater->add_control(
+			'slide_custom_style_heading',
+			[
+				'label'     => esc_html__( 'Custom Style (This Slide Only)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$repeater->add_control(
 			'slide_override_colors',
 			[
-				'label'        => esc_html__( 'Override Text Colors for This Slide', 'proslide-elementor' ),
+				'label'        => esc_html__( 'Custom Style for This Slide', 'proslide-elementor' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'default'      => '',
-				'separator'    => 'before',
+			]
+		);
+
+		// Per-slide Subtitle styling.
+		$repeater->add_control(
+			'slide_custom_subtitle_heading',
+			[
+				'label'     => esc_html__( 'Subtitle / Badge', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
 			]
 		);
 
@@ -614,6 +632,36 @@ class Content_Slider extends Widget_Base {
 			[
 				'label'     => esc_html__( 'Subtitle Color', 'proslide-elementor' ),
 				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_subtitle_bg',
+			[
+				'label'     => esc_html__( 'Subtitle Background', 'proslide-elementor' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_subtitle_size',
+			[
+				'label'     => esc_html__( 'Subtitle Font Size (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 10,
+				'max'       => 50,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		// Per-slide Title styling.
+		$repeater->add_control(
+			'slide_custom_title_heading',
+			[
+				'label'     => esc_html__( 'Title', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
 				'condition' => [ 'slide_override_colors' => 'yes' ],
 			]
 		);
@@ -628,10 +676,183 @@ class Content_Slider extends Widget_Base {
 		);
 
 		$repeater->add_control(
+			'slide_custom_title_size',
+			[
+				'label'     => esc_html__( 'Title Font Size (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 16,
+				'max'       => 120,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_title_weight',
+			[
+				'label'     => esc_html__( 'Title Font Weight', 'proslide-elementor' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => '',
+				'options'   => [
+					''    => esc_html__( 'Default', 'proslide-elementor' ),
+					'400' => '400',
+					'500' => '500',
+					'600' => '600',
+					'700' => '700',
+					'800' => '800',
+					'900' => '900',
+				],
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		// Per-slide Description styling.
+		$repeater->add_control(
+			'slide_custom_desc_heading',
+			[
+				'label'     => esc_html__( 'Description', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
 			'slide_custom_desc_color',
 			[
 				'label'     => esc_html__( 'Description Color', 'proslide-elementor' ),
 				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_desc_size',
+			[
+				'label'     => esc_html__( 'Description Font Size (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 12,
+				'max'       => 40,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		// Per-slide Primary Button styling.
+		$repeater->add_control(
+			'slide_custom_btn1_heading',
+			[
+				'label'     => esc_html__( 'Primary Button', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn1_color',
+			[
+				'label'     => esc_html__( 'Text Color', 'proslide-elementor' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn1_bg',
+			[
+				'label'     => esc_html__( 'Background Color', 'proslide-elementor' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn1_padding_v',
+			[
+				'label'     => esc_html__( 'Vertical Padding (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 60,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn1_padding_h',
+			[
+				'label'     => esc_html__( 'Horizontal Padding (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 80,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn1_radius',
+			[
+				'label'     => esc_html__( 'Border Radius (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 60,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		// Per-slide Secondary Button styling.
+		$repeater->add_control(
+			'slide_custom_btn2_heading',
+			[
+				'label'     => esc_html__( 'Secondary Button', 'proslide-elementor' ),
+				'type'      => Controls_Manager::HEADING,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn2_color',
+			[
+				'label'     => esc_html__( 'Text Color', 'proslide-elementor' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn2_bg',
+			[
+				'label'     => esc_html__( 'Background Color', 'proslide-elementor' ),
+				'type'      => Controls_Manager::COLOR,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn2_padding_v',
+			[
+				'label'     => esc_html__( 'Vertical Padding (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 60,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn2_padding_h',
+			[
+				'label'     => esc_html__( 'Horizontal Padding (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 80,
+				'condition' => [ 'slide_override_colors' => 'yes' ],
+			]
+		);
+
+		$repeater->add_control(
+			'slide_custom_btn2_radius',
+			[
+				'label'     => esc_html__( 'Border Radius (px)', 'proslide-elementor' ),
+				'type'      => Controls_Manager::NUMBER,
+				'min'       => 0,
+				'max'       => 60,
 				'condition' => [ 'slide_override_colors' => 'yes' ],
 			]
 		);
@@ -853,14 +1074,39 @@ class Content_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Style Tab: Subtitle / Badge.
+	 * Style Tab: Subtitle / Badge (Global).
 	 */
 	private function register_style_subtitle_section() {
 		$this->start_controls_section(
 			'section_style_subtitle',
 			[
-				'label' => esc_html__( 'Subtitle / Badge', 'proslide-elementor' ),
+				'label' => esc_html__( 'Subtitle / Badge (Global)', 'proslide-elementor' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_responsive_control(
+			'subtitle_align',
+			[
+				'label'     => esc_html__( 'Alignment', 'proslide-elementor' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => [
+					'flex-start' => [
+						'title' => esc_html__( 'Left', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-left',
+					],
+					'center'     => [
+						'title' => esc_html__( 'Center', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-center',
+					],
+					'flex-end'   => [
+						'title' => esc_html__( 'Right', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-right',
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .proslide-subtitle' => 'align-self: {{VALUE}};',
+				],
 			]
 		);
 
@@ -960,14 +1206,39 @@ class Content_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Style Tab: Title.
+	 * Style Tab: Title (Global).
 	 */
 	private function register_style_title_section() {
 		$this->start_controls_section(
 			'section_style_title',
 			[
-				'label' => esc_html__( 'Title', 'proslide-elementor' ),
+				'label' => esc_html__( 'Title (Global)', 'proslide-elementor' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_responsive_control(
+			'title_align',
+			[
+				'label'     => esc_html__( 'Alignment', 'proslide-elementor' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => [
+					'left'   => [
+						'title' => esc_html__( 'Left', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-left',
+					],
+					'center' => [
+						'title' => esc_html__( 'Center', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-center',
+					],
+					'right'  => [
+						'title' => esc_html__( 'Right', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-right',
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .proslide-title' => 'text-align: {{VALUE}};',
+				],
 			]
 		);
 
@@ -1016,14 +1287,39 @@ class Content_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Style Tab: Description.
+	 * Style Tab: Description (Global).
 	 */
 	private function register_style_description_section() {
 		$this->start_controls_section(
 			'section_style_description',
 			[
-				'label' => esc_html__( 'Description', 'proslide-elementor' ),
+				'label' => esc_html__( 'Description (Global)', 'proslide-elementor' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_responsive_control(
+			'description_align',
+			[
+				'label'     => esc_html__( 'Alignment', 'proslide-elementor' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => [
+					'left'   => [
+						'title' => esc_html__( 'Left', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-left',
+					],
+					'center' => [
+						'title' => esc_html__( 'Center', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-center',
+					],
+					'right'  => [
+						'title' => esc_html__( 'Right', 'proslide-elementor' ),
+						'icon'  => 'eicon-text-align-right',
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .proslide-description' => 'text-align: {{VALUE}};',
+				],
 			]
 		);
 
@@ -1064,7 +1360,7 @@ class Content_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Style Tab: Reusable Button Style Section.
+	 * Style Tab: Reusable Button Style Section (Global).
 	 *
 	 * @param string $prefix   Control ID prefix.
 	 * @param string $label    Section label.
@@ -1080,6 +1376,31 @@ class Content_Slider extends Widget_Base {
 		);
 
 		if ( 'btn_1' === $prefix ) {
+			$this->add_responsive_control(
+				'buttons_align',
+				[
+					'label'     => esc_html__( 'Buttons Alignment', 'proslide-elementor' ),
+					'type'      => Controls_Manager::CHOOSE,
+					'options'   => [
+						'flex-start' => [
+							'title' => esc_html__( 'Left', 'proslide-elementor' ),
+							'icon'  => 'eicon-h-align-left',
+						],
+						'center'     => [
+							'title' => esc_html__( 'Center', 'proslide-elementor' ),
+							'icon'  => 'eicon-h-align-center',
+						],
+						'flex-end'   => [
+							'title' => esc_html__( 'Right', 'proslide-elementor' ),
+							'icon'  => 'eicon-h-align-right',
+						],
+					],
+					'selectors' => [
+						'{{WRAPPER}} .proslide-buttons' => 'justify-content: {{VALUE}};',
+					],
+				]
+			);
+
 			$this->add_responsive_control(
 				'buttons_gap',
 				[
@@ -1316,14 +1637,26 @@ class Content_Slider extends Widget_Base {
 			$bg_classes[] = 'proslide-ken-burns-' . sanitize_html_class( $ken_burns_dir );
 		}
 
-		$h_align    = ! empty( $slide['slide_h_align'] ) ? $slide['slide_h_align'] : 'center';
-		$v_align    = ! empty( $slide['slide_v_align'] ) ? $slide['slide_v_align'] : 'center';
+		// Horizontal and Vertical position mapping.
+		$h_pos_val = ! empty( $slide['slide_h_pos'] ) ? $slide['slide_h_pos'] : ( ! empty( $slide['slide_h_align'] ) ? $slide['slide_h_align'] : 'center' );
+		$v_pos_val = ! empty( $slide['slide_v_pos'] ) ? $slide['slide_v_pos'] : ( ! empty( $slide['slide_v_align'] ) ? $slide['slide_v_align'] : 'center' );
+
+		// Normalize horizontal position class (left, center, right).
+		$h_pos_clean = in_array( $h_pos_val, [ 'left', 'flex-start' ], true ) ? 'left' : ( in_array( $h_pos_val, [ 'right', 'flex-end' ], true ) ? 'right' : 'center' );
+
+		// Normalize vertical justify-content (top -> flex-start, center -> center, bottom -> flex-end).
+		$v_justify = in_array( $v_pos_val, [ 'top', 'flex-start' ], true ) ? 'flex-start' : ( in_array( $v_pos_val, [ 'bottom', 'flex-end' ], true ) ? 'flex-end' : 'center' );
+
 		$text_align = ! empty( $slide['slide_text_align'] ) ? $slide['slide_text_align'] : 'center';
 
+		$inner_classes = [
+			'proslide-slide-inner',
+			'proslide-h-' . $h_pos_clean,
+		];
+
 		$inner_style = sprintf(
-			'justify-content:%s; align-items:%s; text-align:%s;',
-			esc_attr( $h_align ),
-			esc_attr( $v_align ),
+			'justify-content:%s; text-align:%s;',
+			esc_attr( $v_justify ),
 			esc_attr( $text_align )
 		);
 
@@ -1351,7 +1684,7 @@ class Content_Slider extends Widget_Base {
 			<?php endif; ?>
 
 			<?php if ( in_array( $slide_type, [ 'content', 'both' ], true ) ) : ?>
-				<div class="proslide-slide-inner" style="<?php echo esc_attr( $inner_style ); ?>">
+				<div class="<?php echo esc_attr( implode( ' ', $inner_classes ) ); ?>" style="<?php echo esc_attr( $inner_style ); ?>">
 					<div class="proslide-content-box">
 						<?php $this->render_slide_content( $slide ); ?>
 					</div>
@@ -1362,7 +1695,7 @@ class Content_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Render slide inner text & buttons.
+	 * Render slide inner text & buttons with per-slide overrides.
 	 *
 	 * @param array $slide Slide data.
 	 */
@@ -1370,11 +1703,21 @@ class Content_Slider extends Widget_Base {
 		$override = ( 'yes' === ( $slide['slide_override_colors'] ?? '' ) );
 
 		if ( ! empty( $slide['slide_subtitle'] ) ) :
-			$sub_style = ( $override && ! empty( $slide['slide_custom_subtitle_color'] ) )
-				? 'style="color:' . esc_attr( $slide['slide_custom_subtitle_color'] ) . ';"'
-				: '';
+			$sub_styles = [];
+			if ( $override ) {
+				if ( ! empty( $slide['slide_custom_subtitle_color'] ) ) {
+					$sub_styles[] = 'color:' . esc_attr( $slide['slide_custom_subtitle_color'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_subtitle_bg'] ) ) {
+					$sub_styles[] = 'background-color:' . esc_attr( $slide['slide_custom_subtitle_bg'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_subtitle_size'] ) ) {
+					$sub_styles[] = 'font-size:' . absint( $slide['slide_custom_subtitle_size'] ) . 'px;';
+				}
+			}
+			$sub_attr = ! empty( $sub_styles ) ? ' style="' . esc_attr( implode( ' ', $sub_styles ) ) . '"' : '';
 			?>
-			<div class="proslide-subtitle" <?php echo $sub_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<div class="proslide-subtitle"<?php echo $sub_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php if ( ! empty( $slide['slide_subtitle_icon']['value'] ) ) : ?>
 					<span class="proslide-subtitle-icon">
 						<?php Icons_Manager::render_icon( $slide['slide_subtitle_icon'], [ 'aria-hidden' => 'true' ] ); ?>
@@ -1386,24 +1729,41 @@ class Content_Slider extends Widget_Base {
 		endif;
 
 		if ( ! empty( $slide['slide_title'] ) ) :
-			$tag         = Utils::validate_html_tag( $slide['slide_title_tag'] ?? 'h2' );
-			$title_style = ( $override && ! empty( $slide['slide_custom_title_color'] ) )
-				? 'style="color:' . esc_attr( $slide['slide_custom_title_color'] ) . ';"'
-				: '';
+			$tag          = Utils::validate_html_tag( $slide['slide_title_tag'] ?? 'h2' );
+			$title_styles = [];
+			if ( $override ) {
+				if ( ! empty( $slide['slide_custom_title_color'] ) ) {
+					$title_styles[] = 'color:' . esc_attr( $slide['slide_custom_title_color'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_title_size'] ) ) {
+					$title_styles[] = 'font-size:' . absint( $slide['slide_custom_title_size'] ) . 'px;';
+				}
+				if ( ! empty( $slide['slide_custom_title_weight'] ) ) {
+					$title_styles[] = 'font-weight:' . esc_attr( $slide['slide_custom_title_weight'] ) . ';';
+				}
+			}
+			$title_attr = ! empty( $title_styles ) ? ' style="' . esc_attr( implode( ' ', $title_styles ) ) . '"' : '';
 			printf(
-				'<%1$s class="proslide-title" %2$s>%3$s</%1$s>',
+				'<%1$s class="proslide-title"%2$s>%3$s</%1$s>',
 				esc_html( $tag ),
-				$title_style, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$title_attr, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				wp_kses_post( nl2br( $slide['slide_title'] ) )
 			);
 		endif;
 
 		if ( ! empty( $slide['slide_description'] ) ) :
-			$desc_style = ( $override && ! empty( $slide['slide_custom_desc_color'] ) )
-				? 'style="color:' . esc_attr( $slide['slide_custom_desc_color'] ) . ';"'
-				: '';
+			$desc_styles = [];
+			if ( $override ) {
+				if ( ! empty( $slide['slide_custom_desc_color'] ) ) {
+					$desc_styles[] = 'color:' . esc_attr( $slide['slide_custom_desc_color'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_desc_size'] ) ) {
+					$desc_styles[] = 'font-size:' . absint( $slide['slide_custom_desc_size'] ) . 'px;';
+				}
+			}
+			$desc_attr = ! empty( $desc_styles ) ? ' style="' . esc_attr( implode( ' ', $desc_styles ) ) . '"' : '';
 			?>
-			<div class="proslide-description" <?php echo $desc_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<div class="proslide-description"<?php echo $desc_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php echo wp_kses_post( $slide['slide_description'] ); ?>
 			</div>
 			<?php
@@ -1413,6 +1773,45 @@ class Content_Slider extends Widget_Base {
 		$has_btn_2 = ! empty( $slide['slide_btn_2_text'] );
 
 		if ( $has_btn_1 || $has_btn_2 ) :
+			$btn1_styles = [];
+			$btn2_styles = [];
+
+			if ( $override ) {
+				if ( ! empty( $slide['slide_custom_btn1_color'] ) ) {
+					$btn1_styles[] = 'color:' . esc_attr( $slide['slide_custom_btn1_color'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_btn1_bg'] ) ) {
+					$btn1_styles[] = 'background-color:' . esc_attr( $slide['slide_custom_btn1_bg'] ) . ';';
+				}
+				if ( isset( $slide['slide_custom_btn1_padding_v'] ) && '' !== $slide['slide_custom_btn1_padding_v'] ) {
+					$btn1_styles[] = 'padding-top:' . absint( $slide['slide_custom_btn1_padding_v'] ) . 'px; padding-bottom:' . absint( $slide['slide_custom_btn1_padding_v'] ) . 'px;';
+				}
+				if ( isset( $slide['slide_custom_btn1_padding_h'] ) && '' !== $slide['slide_custom_btn1_padding_h'] ) {
+					$btn1_styles[] = 'padding-left:' . absint( $slide['slide_custom_btn1_padding_h'] ) . 'px; padding-right:' . absint( $slide['slide_custom_btn1_padding_h'] ) . 'px;';
+				}
+				if ( isset( $slide['slide_custom_btn1_radius'] ) && '' !== $slide['slide_custom_btn1_radius'] ) {
+					$btn1_styles[] = 'border-radius:' . absint( $slide['slide_custom_btn1_radius'] ) . 'px;';
+				}
+
+				if ( ! empty( $slide['slide_custom_btn2_color'] ) ) {
+					$btn2_styles[] = 'color:' . esc_attr( $slide['slide_custom_btn2_color'] ) . ';';
+				}
+				if ( ! empty( $slide['slide_custom_btn2_bg'] ) ) {
+					$btn2_styles[] = 'background-color:' . esc_attr( $slide['slide_custom_btn2_bg'] ) . ';';
+				}
+				if ( isset( $slide['slide_custom_btn2_padding_v'] ) && '' !== $slide['slide_custom_btn2_padding_v'] ) {
+					$btn2_styles[] = 'padding-top:' . absint( $slide['slide_custom_btn2_padding_v'] ) . 'px; padding-bottom:' . absint( $slide['slide_custom_btn2_padding_v'] ) . 'px;';
+				}
+				if ( isset( $slide['slide_custom_btn2_padding_h'] ) && '' !== $slide['slide_custom_btn2_padding_h'] ) {
+					$btn2_styles[] = 'padding-left:' . absint( $slide['slide_custom_btn2_padding_h'] ) . 'px; padding-right:' . absint( $slide['slide_custom_btn2_padding_h'] ) . 'px;';
+				}
+				if ( isset( $slide['slide_custom_btn2_radius'] ) && '' !== $slide['slide_custom_btn2_radius'] ) {
+					$btn2_styles[] = 'border-radius:' . absint( $slide['slide_custom_btn2_radius'] ) . 'px;';
+				}
+			}
+
+			$btn1_inline = ! empty( $btn1_styles ) ? implode( ' ', $btn1_styles ) : '';
+			$btn2_inline = ! empty( $btn2_styles ) ? implode( ' ', $btn2_styles ) : '';
 			?>
 			<div class="proslide-buttons">
 				<?php
@@ -1422,7 +1821,8 @@ class Content_Slider extends Widget_Base {
 						$slide['slide_btn_1_link'] ?? [],
 						$slide['slide_btn_1_icon'] ?? [],
 						$slide['slide_btn_1_icon_pos'] ?? 'right',
-						'proslide-btn proslide-btn-primary'
+						'proslide-btn proslide-btn-primary',
+						$btn1_inline
 					);
 				}
 				if ( $has_btn_2 ) {
@@ -1431,7 +1831,8 @@ class Content_Slider extends Widget_Base {
 						$slide['slide_btn_2_link'] ?? [],
 						$slide['slide_btn_2_icon'] ?? [],
 						$slide['slide_btn_2_icon_pos'] ?? 'right',
-						'proslide-btn proslide-btn-secondary'
+						'proslide-btn proslide-btn-secondary',
+						$btn2_inline
 					);
 				}
 				?>
@@ -1448,14 +1849,16 @@ class Content_Slider extends Widget_Base {
 	 * @param array  $icon     Icons control array.
 	 * @param string $icon_pos Icon position (left|right).
 	 * @param string $classes  CSS classes.
+	 * @param string $inline   Inline style string.
 	 */
-	private function render_button( $text, array $link, array $icon, $icon_pos, $classes ) {
-		$url      = ! empty( $link['url'] ) ? $link['url'] : '#';
-		$external = ! empty( $link['is_external'] ) ? ' target="_blank"' : '';
-		$nofollow = ! empty( $link['nofollow'] ) ? ' rel="nofollow"' : '';
-		$has_icon = ! empty( $icon['value'] );
+	private function render_button( $text, array $link, array $icon, $icon_pos, $classes, $inline = '' ) {
+		$url         = ! empty( $link['url'] ) ? $link['url'] : '#';
+		$external    = ! empty( $link['is_external'] ) ? ' target="_blank"' : '';
+		$nofollow    = ! empty( $link['nofollow'] ) ? ' rel="nofollow"' : '';
+		$has_icon    = ! empty( $icon['value'] );
+		$style_attr  = $inline ? ' style="' . esc_attr( $inline ) . '"' : '';
 		?>
-		<a class="<?php echo esc_attr( $classes ); ?>" href="<?php echo esc_url( $url ); ?>"<?php echo $external . $nofollow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<a class="<?php echo esc_attr( $classes ); ?>" href="<?php echo esc_url( $url ); ?>"<?php echo $external . $nofollow . $style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<?php if ( $has_icon && 'left' === $icon_pos ) : ?>
 				<span class="proslide-btn-icon proslide-btn-icon-left">
 					<?php Icons_Manager::render_icon( $icon, [ 'aria-hidden' => 'true' ] ); ?>
