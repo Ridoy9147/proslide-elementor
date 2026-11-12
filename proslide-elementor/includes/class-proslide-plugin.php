@@ -7,8 +7,6 @@
 
 namespace ProSlide;
 
-use Elementor\Plugin as Elementor_Plugin;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,7 +44,6 @@ final class Plugin {
 		add_action( 'elementor/frontend/after_register_styles', [ $this, 'register_styles' ] );
 		add_action( 'elementor/frontend/after_register_scripts', [ $this, 'register_scripts' ] );
 		add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'enqueue_editor_styles' ] );
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'enqueue_editor_scripts' ] );
 	}
 
 	/**
@@ -72,29 +69,6 @@ final class Plugin {
 	public function register_widgets( $widgets_manager ) {
 		require_once PROSLIDE_PATH . 'includes/widgets/class-proslide-content-slider.php';
 		$widgets_manager->register( new Widgets\Content_Slider() );
-
-		// Register Nested Elementor Widget Slider if Elementor Nested Elements module is active.
-		if ( $this->is_nested_elements_active() ) {
-			require_once PROSLIDE_PATH . 'includes/widgets/class-proslide-nested-slider.php';
-			$widgets_manager->register( new Widgets\Nested_Slider() );
-		}
-	}
-
-	/**
-	 * Check if Elementor's Nested Elements feature is available and active.
-	 *
-	 * @return bool
-	 */
-	private function is_nested_elements_active() {
-		if ( ! class_exists( '\Elementor\Modules\NestedElements\Base\Widget_Nested_Base' ) ) {
-			return false;
-		}
-
-		if ( isset( Elementor_Plugin::$instance->experiments ) && method_exists( Elementor_Plugin::$instance->experiments, 'is_feature_active' ) ) {
-			return Elementor_Plugin::$instance->experiments->is_feature_active( 'nested-elements' );
-		}
-
-		return true;
 	}
 
 	/**
@@ -135,24 +109,9 @@ final class Plugin {
 	}
 
 	/**
-	 * Enqueue styles inside Elementor editor if needed.
+	 * Enqueue styles inside Elementor editor.
 	 */
 	public function enqueue_editor_styles() {
 		wp_enqueue_style( 'proslide-css' );
-	}
-
-	/**
-	 * Enqueue scripts inside Elementor editor for nested elements support.
-	 */
-	public function enqueue_editor_scripts() {
-		if ( $this->is_nested_elements_active() ) {
-			wp_enqueue_script(
-				'proslide-editor-js',
-				PROSLIDE_URL . 'assets/js/proslide-editor.js',
-				[ 'elementor-editor' ],
-				PROSLIDE_VERSION,
-				true
-			);
-		}
 	}
 }

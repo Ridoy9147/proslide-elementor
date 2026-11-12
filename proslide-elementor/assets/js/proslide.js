@@ -132,6 +132,5 @@
 
 	$( window ).on( 'elementor/frontend/init', function () {
 		elementorFrontend.hooks.addAction( 'frontend/element_ready/proslide-content-slider.default', initProSlide );
-		elementorFrontend.hooks.addAction( 'frontend/element_ready/proslide-nested-slider.default', initProSlide );
 	} );
 }( jQuery ) );
